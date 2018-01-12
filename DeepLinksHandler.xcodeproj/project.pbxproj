@@ -13,6 +13,7 @@
 		B572AA4820090F1900699DDC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B572AA4720090F1900699DDC /* Assets.xcassets */; };
 		B572AA4B20090F1900699DDC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B572AA4920090F1900699DDC /* LaunchScreen.storyboard */; };
 		B572AA4E20090F1900699DDC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B572AA4D20090F1900699DDC /* main.m */; };
+		B572AA5720090FE900699DDC /* DeepLinksHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B572AA5520090FE800699DDC /* DeepLinksHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		B572AA4A20090F1900699DDC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B572AA4C20090F1900699DDC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B572AA4D20090F1900699DDC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B572AA5520090FE800699DDC /* DeepLinksHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeepLinksHandler.m; sourceTree = "<group>"; };
+		B572AA5620090FE800699DDC /* DeepLinksHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeepLinksHandler.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,7 +45,8 @@
 		B572AA3220090F1900699DDC = {
 			isa = PBXGroup;
 			children = (
-				B572AA3D20090F1900699DDC /* DeepLinksHandler */,
+				B572AA5420090FE800699DDC /* DeepLinksHandler */,
+				B572AA3D20090F1900699DDC /* Demo */,
 				B572AA3C20090F1900699DDC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,7 +59,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B572AA3D20090F1900699DDC /* DeepLinksHandler */ = {
+		B572AA3D20090F1900699DDC /* Demo */ = {
 			isa = PBXGroup;
 			children = (
 				B572AA3E20090F1900699DDC /* AppDelegate.h */,
@@ -67,6 +71,15 @@
 				B572AA4920090F1900699DDC /* LaunchScreen.storyboard */,
 				B572AA4C20090F1900699DDC /* Info.plist */,
 				B572AA4D20090F1900699DDC /* main.m */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		B572AA5420090FE800699DDC /* DeepLinksHandler */ = {
+			isa = PBXGroup;
+			children = (
+				B572AA5520090FE800699DDC /* DeepLinksHandler.m */,
+				B572AA5620090FE800699DDC /* DeepLinksHandler.h */,
 			);
 			path = DeepLinksHandler;
 			sourceTree = "<group>";
@@ -144,6 +157,7 @@
 			files = (
 				B572AA4320090F1900699DDC /* ViewController.m in Sources */,
 				B572AA4E20090F1900699DDC /* main.m in Sources */,
+				B572AA5720090FE900699DDC /* DeepLinksHandler.m in Sources */,
 				B572AA4020090F1900699DDC /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
