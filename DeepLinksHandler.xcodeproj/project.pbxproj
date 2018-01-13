@@ -14,6 +14,8 @@
 		B572AA4B20090F1900699DDC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B572AA4920090F1900699DDC /* LaunchScreen.storyboard */; };
 		B572AA4E20090F1900699DDC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B572AA4D20090F1900699DDC /* main.m */; };
 		B572AA5720090FE900699DDC /* DeepLinksHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = B572AA5520090FE800699DDC /* DeepLinksHandler.m */; };
+		B572AA5A200A371B00699DDC /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = B572AA58200A371B00699DDC /* README.md */; };
+		B572AA5B200A371B00699DDC /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = B572AA59200A371B00699DDC /* LICENSE */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,8 @@
 		B572AA4D20090F1900699DDC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B572AA5520090FE800699DDC /* DeepLinksHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DeepLinksHandler.m; sourceTree = "<group>"; };
 		B572AA5620090FE800699DDC /* DeepLinksHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeepLinksHandler.h; sourceTree = "<group>"; };
+		B572AA58200A371B00699DDC /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		B572AA59200A371B00699DDC /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,9 +49,11 @@
 		B572AA3220090F1900699DDC = {
 			isa = PBXGroup;
 			children = (
+				B572AA58200A371B00699DDC /* README.md */,
 				B572AA5420090FE800699DDC /* DeepLinksHandler */,
 				B572AA3D20090F1900699DDC /* Demo */,
 				B572AA3C20090F1900699DDC /* Products */,
+				B572AA59200A371B00699DDC /* LICENSE */,
 			);
 			sourceTree = "<group>";
 		};
@@ -144,7 +150,9 @@
 			files = (
 				B572AA4B20090F1900699DDC /* LaunchScreen.storyboard in Resources */,
 				B572AA4820090F1900699DDC /* Assets.xcassets in Resources */,
+				B572AA5A200A371B00699DDC /* README.md in Resources */,
 				B572AA4620090F1900699DDC /* Main.storyboard in Resources */,
+				B572AA5B200A371B00699DDC /* LICENSE in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
