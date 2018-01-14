@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.author           = { 'Maksim Kurpa' => 'maksim.kurpa@gmail.com' }
   s.description      = 'DeepLinksHandler is the easiest way to handle internal and external URLs in your project!'
   s.homepage         = 'https://github.com/MaksimKurpa/DeepLinksHandler'
-  s.source       = { :git => 'git@github.com:MaksimKurpa/DeepLinksHandler.git', :branch => 'master',:tag => s.version.to_s }
+  s.source       = { :git => 'https://github.com/MaksimKurpa/DeepLinksHandler', :branch => 'master',:tag => s.version.to_s }
   s.social_media_url = 'https://www.facebook.com/maksim.kurpa'
   s.source_files = 'DeepLinksHandler/*.{h,m}'
   s.requires_arc = true
