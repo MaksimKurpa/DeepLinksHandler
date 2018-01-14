@@ -7,23 +7,36 @@
 //
 
 #import "ViewController.h"
+#import "DeepLinksHandler.h"
 
-@interface ViewController ()
-
-@end
+static NSString * const kTestHandleURL = @"deeplinkshandler://viewcontroller?title=ExampleAlert&description=ExampleDescriptionAlert";
 
 @implementation ViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    [DeepLinksHandler handleURL:[NSURL URLWithString:kTestHandleURL] withBlock:^(NSArray<NSURLQueryItem *> *queryItems) {
+        
+        NSString *title = nil;
+        NSString *description = nil;
+        for (NSURLQueryItem *item in queryItems)
+        {
+            if ([item.name isEqualToString:@"title"])
+                title = item.value;
+            else if ([item.name isEqualToString:@"description"])
+                description = item.value;
+        }
+        if (title && description) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+            [[[UIAlertView alloc] initWithTitle:title message:description delegate:nil cancelButtonTitle:@"Cancel" otherButtonTitles: nil] show];
+#pragma clang diagnostic pop
+        }
+    }];
 }
 
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (IBAction)buttonAction:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kTestHandleURL] options:@{} completionHandler:nil];
 }
-
 
 @end

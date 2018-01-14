@@ -16,7 +16,8 @@ static NSString *_handlingURL = nil;
 
 #pragma mark - public
 
-+ (void)setHandlerBlock:(DeepLinksHandlerBlock)block forURL:(NSURL *)url {
++ (void)handleURL:(nullable NSURL *)url withBlock:(nullable DeepLinksHandlerBlock)block
+ {
     NSString *key = [self convertToSchemePlusHostKeyForURL:url];
     if (key && block) {
         [_handlerBlocks setObject:block forKey:key];
@@ -43,19 +44,35 @@ static NSString *_handlingURL = nil;
         selectorForSwizzle_UIApplicationDelegate_ios9_0 = @selector(application:openURL:options:);
     }
     SEL selectorForSwizzle_UIApplicationDelegate_deprecated = @selector(application:openURL:sourceApplication:annotation:);
+    SEL selectorForSwizzle_UIApplicationDelegate_deprecated2 = @selector(application:handleOpenURL:);
     
-    
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
+    void (^swizzlingBlock)(void) = ^() {
         [self overloadURLsMethodsInObject:[UIApplication sharedApplication] forSelector:selectorForSwizzle_UIApplication_deprecated];
         if (selectorForSwizzle_UIApplication_ios10_0 != NULL) {
             [self overloadURLsMethodsInObject:[UIApplication sharedApplication] forSelector:selectorForSwizzle_UIApplication_ios10_0];
         }
+        [self overloadURLsMethodsInObject:[UIApplication sharedApplication].delegate forSelector:selectorForSwizzle_UIApplicationDelegate_deprecated2];
         [self overloadURLsMethodsInObject:[UIApplication sharedApplication].delegate forSelector:selectorForSwizzle_UIApplicationDelegate_deprecated];
         if (selectorForSwizzle_UIApplicationDelegate_ios9_0 != NULL) {
             [self overloadURLsMethodsInObject:[UIApplication sharedApplication].delegate forSelector:selectorForSwizzle_UIApplicationDelegate_ios9_0];
         }
+    };
+    
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self runAfterAppInicializationWithBlock:swizzlingBlock];
     });
+    
+}
+
++ (void)runAfterAppInicializationWithBlock:(dispatch_block_t)block {
+    UIApplication *application = [UIApplication sharedApplication];
+    if (!application) {
+        [self performSelector:@selector(runAfterAppInicializationWithBlock:) withObject:block afterDelay:0.1];
+    } else {
+        if (block)
+            block();
+    }
 }
 
 + (void)overloadURLsMethodsInObject:(id)object forSelector:(SEL)selector {
@@ -92,7 +109,7 @@ static NSString *_handlingURL = nil;
             }
         });
     } else if (parametersCount == 2) {
-        
+        //UIApplicationDelegate - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
         //UIApplication- (BOOL)openURL:(NSURL *)url
         typedef void (*DeepLinkBlock2Parameters)(void* target, SEL selector, void* value);
         DeepLinkBlock2Parameters block = (DeepLinkBlock2Parameters)(originalIMP);
@@ -106,6 +123,8 @@ static NSString *_handlingURL = nil;
     }
     
 }
+
+#pragma mark - handle
 
 + (NSURL *)handleURL:(NSURL *)url {
     if ([url.absoluteString isEqualToString:_handlingURL] == NO)
@@ -124,14 +143,10 @@ static NSString *_handlingURL = nil;
                 block(queryItems);
             }];
         }
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            if ([url.absoluteString isEqualToString:_handlingURL])
-            {
-                _handlingURL = nil;
-            }
-        });
-        
+        if ([url.absoluteString isEqualToString:_handlingURL])
+        {
+            _handlingURL = nil;
+        }
         return returnedValue;
     }
     else
@@ -139,8 +154,6 @@ static NSString *_handlingURL = nil;
         return url;
     }
 }
-
-#pragma mark - handle
 
 + (void)handleIfAppIsLoadedWithConmplitionBlock:(dispatch_block_t)complitionBlock {
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {

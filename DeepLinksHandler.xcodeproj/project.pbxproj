@@ -302,7 +302,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NX84NCXAJ3;
-				INFOPLIST_FILE = DeepLinksHandler/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maksimkurpa.dlh.DeepLinksHandler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -316,7 +316,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NX84NCXAJ3;
-				INFOPLIST_FILE = DeepLinksHandler/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Demo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.maksimkurpa.dlh.DeepLinksHandler;
 				PRODUCT_NAME = "$(TARGET_NAME)";

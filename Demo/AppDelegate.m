@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-
+#import "DeepLinksHandler.h"
 @interface AppDelegate ()
 
 @end
@@ -16,7 +16,16 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    NSURL *url = launchOptions[UIApplicationLaunchOptionsURLKey];
+    if (url) {
+        [DeepLinksHandler handleURL:url withBlock:^(NSArray<NSURLQueryItem *> *queryItems) {
+            NSLog(@"Your deelpink is handled");
+        }];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [application openURL:url options:@{} completionHandler:nil];
+        });
+    }
     return YES;
 }
 
