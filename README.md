@@ -56,7 +56,8 @@ First special case - handle external URLs when app isn't launched.
 }
 ```
 In other cases of usage you should set your handle block for special URl before calling its from sowewhere.
-Notice: Only the last sent block for a unique URL will be executed.
+
+<b style='color:red'>!!!Notice:</b> Only the last sent block for a unique URL will be executed.
 
 ```objc
 static NSString * const kTestHandleURL = @"testurl://viewcontroller?title=ExampleAlert&description=ExampleDescriptionAlert";
