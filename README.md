@@ -37,7 +37,7 @@ If you don't need to configurate а complexed behavior, you can use URL without 
 
 `deeplinkshandler://show_subscription_screen`
 
-First special case - handle external URLs when app isn't launched. 
+One special case - handle external URLs when app isn't launched. 
 
 ```objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
