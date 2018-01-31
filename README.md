@@ -44,7 +44,7 @@ First special case - handle external URLs when app isn't launched.
     
     NSURL *url = launchOptions[UIApplicationLaunchOptionsURLKey];
     if (url) {
-        [DeepLinksHandler handleURL:url withBlock:^(NSArray<NSURLQueryItem *> *queryItems) {
+        [DeepLinksHandler handleURL:url withBlock:^(NSURL *url) {
             NSLog(@"Your deelpink is handled");
         }];
         // this 'dispatch_after' necessary to handle your block after swizzling, which happens after [UIApplication sharedApplication] != nil
@@ -66,11 +66,11 @@ static NSString * const kTestHandleURL = @"testurl://viewcontroller?title=Exampl
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [DeepLinksHandler handleURL:[NSURL URLWithString:kTestHandleURL] withBlock:^(NSArray<NSURLQueryItem *> *queryItems) {
+    [DeepLinksHandler handleURL:[NSURL URLWithString:kTestHandleURL] withBlock:^(NSURL *url) {
         
         NSString *title = nil;
         NSString *description = nil;
-        for (NSURLQueryItem *item in queryItems)
+        for (NSURLQueryItem *item in [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES].queryItems)
         {
             if ([item.name isEqualToString:@"title"])
                 title = item.value;
