@@ -30,31 +30,17 @@ static NSString *_handlingURL = nil;
     
     _handlerBlocks = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsCopyIn capacity:3];
     
-    SEL selectorForSwizzle_UIApplication_ios10_0 = NULL;
-    
-    if (@available(iOS 10.0, *)) {
-        selectorForSwizzle_UIApplication_ios10_0 = @selector(openURL:options:completionHandler:);
-    }
-    SEL selectorForSwizzle_UIApplication_deprecated = @selector(openURL:);
-    
-    
-    SEL selectorForSwizzle_UIApplicationDelegate_ios9_0 = NULL;
-    
-    if (@available(iOS 9.0, *)) {
-        selectorForSwizzle_UIApplicationDelegate_ios9_0 = @selector(application:openURL:options:);
-    }
-    SEL selectorForSwizzle_UIApplicationDelegate_deprecated = @selector(application:openURL:sourceApplication:annotation:);
-    SEL selectorForSwizzle_UIApplicationDelegate_deprecated2 = @selector(application:handleOpenURL:);
-    
     void (^swizzlingBlock)(void) = ^() {
-        [self overloadURLsMethodsInObject:[UIApplication sharedApplication] forSelector:selectorForSwizzle_UIApplication_deprecated];
-        if (selectorForSwizzle_UIApplication_ios10_0 != NULL) {
-            [self overloadURLsMethodsInObject:[UIApplication sharedApplication] forSelector:selectorForSwizzle_UIApplication_ios10_0];
-        }
-        [self overloadURLsMethodsInObject:[UIApplication sharedApplication].delegate forSelector:selectorForSwizzle_UIApplicationDelegate_deprecated2];
-        [self overloadURLsMethodsInObject:[UIApplication sharedApplication].delegate forSelector:selectorForSwizzle_UIApplicationDelegate_deprecated];
-        if (selectorForSwizzle_UIApplicationDelegate_ios9_0 != NULL) {
-            [self overloadURLsMethodsInObject:[UIApplication sharedApplication].delegate forSelector:selectorForSwizzle_UIApplicationDelegate_ios9_0];
+        SEL selectors[5] = {
+            @selector(openURL:options:completionHandler:),
+            @selector(openURL:),
+            @selector(application:openURL:options:),
+            @selector(application:openURL:sourceApplication:annotation:),
+            @selector(application:handleOpenURL:),
+        };
+        
+        for (int i = 0; i < 5; i ++) {
+            [self overloadURLsMethodsInObject:(i < 2 ? (id)UIApplication.sharedApplication : (id)UIApplication.sharedApplication.delegate) forSelector:selectors[i]];
         }
     };
     
@@ -76,7 +62,9 @@ static NSString *_handlingURL = nil;
 }
 
 + (void)overloadURLsMethodsInObject:(id)object forSelector:(SEL)selector {
-    
+    if (!object) {
+        return;
+    }
     Method originalMethod = class_getInstanceMethod([object class], selector);
     IMP originalIMP = method_getImplementation(originalMethod);
     NSString *selectorString = NSStringFromSelector(selector);
@@ -100,6 +88,7 @@ static NSString *_handlingURL = nil;
         
         typedef void (*DeepLinkBlock4Parameters)(void* target, SEL selector, void* value, void* value1, void* value2);
         DeepLinkBlock4Parameters block = (DeepLinkBlock4Parameters)(originalIMP);
+        
         swizzleMethodWithBlock_returnedOriginalIMP([object class], selector, ^(void* target, void* value, void* value1, void* value2){
             NSURL *sourceURL = [(__bridge id)(value) isKindOfClass:[NSURL class]] ? (__bridge id)(value) : nil;
             sourceURL = sourceURL ? : ([(__bridge id)(value1) isKindOfClass:[NSURL class]] ? (__bridge id)(value1) : nil);
@@ -108,8 +97,19 @@ static NSString *_handlingURL = nil;
                 block(target, selector, value, value1, value2);
             }
         });
-    } else if (parametersCount == 2) {
+        
+    } else if (parametersCount == 3) {
         //UIApplicationDelegate - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
+        typedef void (*DeepLinkBlock3Parameters)(void* target, SEL selector, void* value, void* value1);
+        DeepLinkBlock3Parameters block = (DeepLinkBlock3Parameters)(originalIMP);
+        swizzleMethodWithBlock_returnedOriginalIMP([object class], selector, ^(void* target, void* value, void* value1){
+            NSURL *sourceURL = [(__bridge id)(value1) isKindOfClass:[NSURL class]] ? (__bridge id)(value1) : nil;
+            NSURL *urlDidntHandle = [self handleURL:sourceURL];
+            if (urlDidntHandle) {
+                block(target, selector, value, value1);
+            }
+        });
+    } else if (parametersCount == 2) {
         //UIApplication- (BOOL)openURL:(NSURL *)url
         typedef void (*DeepLinkBlock2Parameters)(void* target, SEL selector, void* value);
         DeepLinkBlock2Parameters block = (DeepLinkBlock2Parameters)(originalIMP);
@@ -138,9 +138,8 @@ static NSString *_handlingURL = nil;
         if (!block) {
             returnedValue = url;
         } else {
-            NSArray<NSURLQueryItem *> *queryItems = [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES].queryItems;
             [self handleIfAppIsLoadedWithConmplitionBlock:^() {
-                block(queryItems);
+                block(url);
             }];
         }
         if ([url.absoluteString isEqualToString:_handlingURL])
@@ -179,12 +178,14 @@ IMP swizzleMethodWithBlock_returnedOriginalIMP(Class clss, SEL selector, id exec
         return NULL;
     }
     
+    IMP blockIMP = imp_implementationWithBlock(executionBlock);
+    
     Method originalMethod = class_getInstanceMethod(clss, selector);
     if (originalMethod == NULL) {
-        return NULL;
+        class_addMethod(clss, selector, blockIMP, nil);
+        return blockIMP;
     }
     
-    IMP blockIMP = imp_implementationWithBlock(executionBlock);
     BOOL swizzledMethod = class_addMethod(clss, selector, blockIMP, method_getTypeEncoding(originalMethod));
     if (!swizzledMethod) {
         return method_setImplementation(originalMethod, blockIMP);

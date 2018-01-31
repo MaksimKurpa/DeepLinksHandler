@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^DeepLinksHandlerBlock) (NSArray<NSURLQueryItem *> * _Nullable queryItems);
+typedef void (^DeepLinksHandlerBlock)(NSURL * _Nonnull url);
 
 @interface DeepLinksHandler : NSObject
 + (void)handleURL:(nullable NSURL *)url withBlock:(nullable DeepLinksHandlerBlock)block;

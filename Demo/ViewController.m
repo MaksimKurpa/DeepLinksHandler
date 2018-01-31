@@ -15,11 +15,11 @@ static NSString * const kTestHandleURL = @"deeplinkshandler://viewcontroller?tit
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [DeepLinksHandler handleURL:[NSURL URLWithString:kTestHandleURL] withBlock:^(NSArray<NSURLQueryItem *> *queryItems) {
+    [DeepLinksHandler handleURL:[NSURL URLWithString:kTestHandleURL] withBlock:^(NSURL *url) {
         
         NSString *title = nil;
         NSString *description = nil;
-        for (NSURLQueryItem *item in queryItems)
+        for (NSURLQueryItem *item in [NSURLComponents componentsWithURL:url resolvingAgainstBaseURL:YES].queryItems)
         {
             if ([item.name isEqualToString:@"title"])
                 title = item.value;
@@ -36,7 +36,13 @@ static NSString * const kTestHandleURL = @"deeplinkshandler://viewcontroller?tit
 }
 
 - (IBAction)buttonAction:(id)sender {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:kTestHandleURL] options:@{} completionHandler:nil];
+    NSURL *url= [NSURL URLWithString:kTestHandleURL];
+    [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+//    [[UIApplication sharedApplication] openURL:url];
+//
+//    [UIApplication.sharedApplication.delegate application:UIApplication.sharedApplication handleOpenURL:url];
+//    [UIApplication.sharedApplication.delegate application:UIApplication.sharedApplication openURL:url sourceApplication:nil annotation:nil];
+//    [UIApplication.sharedApplication.delegate application:UIApplication.sharedApplication handleOpenURL:url];
 }
 
 @end
