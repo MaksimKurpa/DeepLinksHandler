@@ -14,18 +14,13 @@
 
 @implementation AppDelegate
 
+static NSString * const kTestHandleURL = @"deeplinkshandler://testURl";
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    NSURL *url = launchOptions[UIApplicationLaunchOptionsURLKey];
-    if (url) {
-        [DeepLinksHandler handleURL:url withBlock:^(NSURL *url) {
-            NSLog(@"Your deelpink is handled");
+        [DeepLinksHandler handleURL:[NSURL URLWithString:kTestHandleURL] withBlock:^(NSURL *url) {
+            NSLog(@"testUrl Handled");
         }];
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [application openURL:url options:@{} completionHandler:nil];
-        });
-    }
     return YES;
 }
 
