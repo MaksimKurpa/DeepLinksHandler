@@ -48,7 +48,12 @@ static NSString *_handlingURL = nil;
     dispatch_once(&onceToken, ^{
         [self runAfterAppInicializationWithBlock:swizzlingBlock];
     });
-    
+    [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
+        NSURL *launchUrl = [note.userInfo objectForKey:UIApplicationLaunchOptionsURLKey];
+        if ([launchUrl isKindOfClass:[NSURL class]]) {
+            [self handleURL:launchUrl];
+        }
+    }];
 }
 
 + (void)runAfterAppInicializationWithBlock:(dispatch_block_t)block {
