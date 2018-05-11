@@ -37,6 +37,9 @@ If you don't need to configurate а complexed behavior, you can use URL without 
 
 `deeplinkshandler://show_subscription_screen`
 
+<details>
+  <summary><strong>Version 1.0.0 - 1.1.0 </strong></summary>
+
 One special case - handle external URLs when app isn't launched. 
 
 ```objc
@@ -55,7 +58,10 @@ One special case - handle external URLs when app isn't launched.
     return YES;
 }
 ```
-In other cases of usage you should set your handle block for special URl before calling its from sowewhere.
+</details>
+
+
+In all cases of usage you should set your handle block for special URl before calling its from sowewhere.
 
 <b style='color:red'>!!!Notice:</b> Only the last sent block for a unique URL will be executed.
 
