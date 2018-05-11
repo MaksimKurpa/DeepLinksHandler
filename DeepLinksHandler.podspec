@@ -1,7 +1,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'DeepLinksHandler'
-  s.version          = '1.2.0'
+  s.version          = '1.1.2'
   s.summary          = 'Convinient utility to handle external and internal URLs.'
   s.ios.deployment_target = '8.0'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
