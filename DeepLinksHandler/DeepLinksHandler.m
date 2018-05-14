@@ -66,11 +66,18 @@ static NSString *_handlingURL = nil;
     }
 }
 
+- (void)fakeMethod{}
+
 + (void)overloadURLsMethodsInObject:(id)object forSelector:(SEL)selector {
     if (!object) {
         return;
     }
     Method originalMethod = class_getInstanceMethod([object class], selector);
+    if (originalMethod == NULL) {
+        originalMethod = class_getInstanceMethod([DeepLinksHandler class], @selector(fakeMethod));
+        class_addMethod([object class], selector, method_getImplementation(originalMethod), nil);
+    }
+
     IMP originalIMP = method_getImplementation(originalMethod);
     NSString *selectorString = NSStringFromSelector(selector);
     NSInteger parametersCount = [selectorString componentsSeparatedByString:@":"].count;
