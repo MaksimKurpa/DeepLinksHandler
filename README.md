@@ -3,7 +3,7 @@ DeepLinksHandler
 
 `DeepLinksHandler` is the easiest way to handle internal and external URLs in your project!
 
-## Demos
+## Demo
 
 I've provided a handful of demos in the bundled example project. To get them to work, you must first install project dependancies with CocoaPods by running:
 

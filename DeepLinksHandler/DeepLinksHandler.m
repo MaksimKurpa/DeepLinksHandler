@@ -13,6 +13,7 @@
 
 static NSMapTable <NSString *, DeepLinksHandlerBlock> *_handlerBlocks = nil;
 static NSString *_handlingURL = nil;
+static BOOL _isNeedToCallOriginalIMP;
 
 #pragma mark - public
 
@@ -24,10 +25,23 @@ static NSString *_handlingURL = nil;
     }
 }
 
++ (BOOL)isNeedToCallOriginalIMP {
+    @synchronized(self) {
+        return _isNeedToCallOriginalIMP;
+    }
+}
+
++ (void)setIsNeedToCallOriginalIMP:(BOOL)isNeedToCallOriginalIMP {
+    @synchronized(self) {
+        _isNeedToCallOriginalIMP = isNeedToCallOriginalIMP;
+    }
+}
+
 #pragma mark - private
 
 + (void)load {
     
+    _isNeedToCallOriginalIMP = YES;
     _handlerBlocks = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsCopyIn capacity:3];
     
     void (^swizzlingBlock)(void) = ^() {
@@ -89,8 +103,9 @@ static NSString *_handlingURL = nil;
         DeepLinkBlock5Parameters block = (DeepLinkBlock5Parameters)(originalIMP);
         swizzleMethodWithBlock_returnedOriginalIMP([object class], selector, ^(void* target, void* value, void* value1, void* value2, void* value3){
             NSURL *sourceURL = [(__bridge id)(value1) isKindOfClass:[NSURL class]] ? (__bridge id)(value1) : nil;
-            NSURL *urlDidntHandle = [self handleURL:sourceURL];
-            if (urlDidntHandle) {
+            
+            [self handleURL:sourceURL];
+            if (self.isNeedToCallOriginalIMP) {
                 block(value, selector, value, value1, value2, value3);
             }
         });
@@ -104,8 +119,9 @@ static NSString *_handlingURL = nil;
         swizzleMethodWithBlock_returnedOriginalIMP([object class], selector, ^(void* target, void* value, void* value1, void* value2){
             NSURL *sourceURL = [(__bridge id)(value) isKindOfClass:[NSURL class]] ? (__bridge id)(value) : nil;
             sourceURL = sourceURL ? : ([(__bridge id)(value1) isKindOfClass:[NSURL class]] ? (__bridge id)(value1) : nil);
-            NSURL *urlDidntHandle = [self handleURL:sourceURL];
-            if (urlDidntHandle) {
+            
+            [self handleURL:sourceURL];
+            if (self.isNeedToCallOriginalIMP) {
                 block(target, selector, value, value1, value2);
             }
         });
@@ -116,8 +132,9 @@ static NSString *_handlingURL = nil;
         DeepLinkBlock3Parameters block = (DeepLinkBlock3Parameters)(originalIMP);
         swizzleMethodWithBlock_returnedOriginalIMP([object class], selector, ^(void* target, void* value, void* value1){
             NSURL *sourceURL = [(__bridge id)(value1) isKindOfClass:[NSURL class]] ? (__bridge id)(value1) : nil;
-            NSURL *urlDidntHandle = [self handleURL:sourceURL];
-            if (urlDidntHandle) {
+            
+            [self handleURL:sourceURL];
+            if (self.isNeedToCallOriginalIMP) {
                 block(target, selector, value, value1);
             }
         });
@@ -127,8 +144,9 @@ static NSString *_handlingURL = nil;
         DeepLinkBlock2Parameters block = (DeepLinkBlock2Parameters)(originalIMP);
         swizzleMethodWithBlock_returnedOriginalIMP([object class], selector, ^(void* target, void* value){
             NSURL *sourceURL = [(__bridge id)(value) isKindOfClass:[NSURL class]] ? (__bridge id)(value) : nil;
-            NSURL *urlDidntHandle = [self handleURL:sourceURL];
-            if (urlDidntHandle) {
+            
+            [self handleURL:sourceURL];
+            if (self.isNeedToCallOriginalIMP) {
                 block(target, selector, value);
             }
         });

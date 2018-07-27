@@ -11,5 +11,8 @@
 typedef void (^DeepLinksHandlerBlock)(NSURL * _Nonnull url);
 
 @interface DeepLinksHandler : NSObject
+
+@property (atomic, assign, class) BOOL isNeedToCallOriginalIMP;
+
 + (void)handleURL:(nullable NSURL *)url withBlock:(nullable DeepLinksHandlerBlock)block;
 @end
