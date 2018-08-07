@@ -96,6 +96,8 @@ static NSString * const kTestHandleURL = @"testurl://viewcontroller?title=Exampl
 @end
 ```
 
+You have ability to control calling of original methods in `UIAplication` and `UIApplicationDelegate`. Just use property `isNeedToCallOriginalIMP` of DeepLinksHandler.
+
 ## License
 
 MIT
