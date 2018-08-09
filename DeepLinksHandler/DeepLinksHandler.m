@@ -18,7 +18,7 @@ static BOOL _isNeedToCallOriginalIMP;
 #pragma mark - public
 
 + (void)handleURL:(nullable NSURL *)url withBlock:(nullable DeepLinksHandlerBlock)block
- {
+{
     NSString *key = [self convertToSchemePlusHostKeyForURL:url];
     if (key && block) {
         [_handlerBlocks setObject:block forKey:key];
@@ -45,16 +45,14 @@ static BOOL _isNeedToCallOriginalIMP;
     _handlerBlocks = [[NSMapTable alloc] initWithKeyOptions:NSPointerFunctionsStrongMemory valueOptions:NSPointerFunctionsCopyIn capacity:3];
     
     void (^swizzlingBlock)(void) = ^() {
-        SEL selectors[5] = {
-            @selector(openURL:options:completionHandler:),
-            @selector(openURL:),
+        SEL selectors[3] = {
             @selector(application:openURL:options:),
             @selector(application:openURL:sourceApplication:annotation:),
             @selector(application:handleOpenURL:),
         };
         
-        for (int i = 0; i < 5; i ++) {
-            [self overloadURLsMethodsInObject:(i < 2 ? (id)UIApplication.sharedApplication : (id)UIApplication.sharedApplication.delegate) forSelector:selectors[i]];
+        for (int i = 0; i < 3; i ++) {
+            [self overloadURLsMethodsInObject:((id)UIApplication.sharedApplication.delegate) forSelector:selectors[i]];
         }
     };
     
@@ -62,6 +60,12 @@ static BOOL _isNeedToCallOriginalIMP;
     dispatch_once(&onceToken, ^{
         [self runAfterAppInicializationWithBlock:swizzlingBlock];
     });
+    [NSNotificationCenter.defaultCenter addObserverForName:UIApplicationDidFinishLaunchingNotification object:nil queue:[NSOperationQueue currentQueue] usingBlock:^(NSNotification * _Nonnull note) {
+        NSURL *launchUrl = [note.userInfo objectForKey:UIApplicationLaunchOptionsURLKey];
+        if ([launchUrl isKindOfClass:[NSURL class]]) {
+            [self handleURL:launchUrl];
+        }
+    }];
 }
 
 + (void)runAfterAppInicializationWithBlock:(dispatch_block_t)block {
@@ -85,7 +89,7 @@ static BOOL _isNeedToCallOriginalIMP;
         originalMethod = class_getInstanceMethod([DeepLinksHandler class], @selector(fakeMethod));
         class_addMethod([object class], selector, method_getImplementation(originalMethod), nil);
     }
-
+    
     IMP originalIMP = method_getImplementation(originalMethod);
     NSString *selectorString = NSStringFromSelector(selector);
     NSInteger parametersCount = [selectorString componentsSeparatedByString:@":"].count;
